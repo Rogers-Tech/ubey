@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Ubey</title>
+	<link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+
+	<style>
+
+		form{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+		.form {
+			padding-left: 10px;
+			padding-right: 10px;
+		}
+
+		.ifr {
+			display: flex;
+			justify-content: center;
+			padding-left: 3px;
+			padding-right: 3px;
+			margin-bottom: 30px;
+		}
+	</style>
+
+
+</head>
+
+<body>
+	<nav class="flex items-center justify-between shadow-lg flex-wrap bg-red-500 p-4">
+		<div class="flex items-center flex-shrink-0 text-white mr-6">
+			
+			<span class="font-semibold text-xl tracking-tight">Ubey</span>
+		</div>
+		<div class="block lg:hidden">
+			<button
+				class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
+				<svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+					<title>Menu</title>
+					<path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+				</svg>
+			</button>
+		</div>
+		<div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+			<div class="text-sm lg:flex-grow">
+
+				<a href="{% url "main" %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal-100 hover:text-white mr-4">
+					Video
+				</a>
+			</div>
+			
+		</div>
+	</nav>
+	<div class="container-fluid">
+		<p class="text-4xl text-center text-gray-700 font-light mt-10">Ubay Youtube Audio Downloader</p>
+		<p class="text-center text-gray-500">Download Youtube audio tracks with just one click using the link address.
+		</p>
+
+		<div class="form mt-10">
+			<form method="post">
+				{% csrf_token %}
+				<input type="text"
+					class="border rounded w-ful py-2 px-3 3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					placeholder="Paste URL" name='audioLink'>
+				<button
+					class="bg-gray-300 mt-sm-2 hover:bg-gray-600 hover:text-gray-200 text-gray-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+					type="submit">Enter</button>
+			</form>
+		</div>
+
+		<div class="ifr">
+			<div class="max-w-sm rounded overflow-hidden px-2 shadow-lg mt-10">
+				{% if vid %}
+				
+				<div class="">
+					<div class="font-bold text-xl mb-2 mt-3">{{vid.title}}</div>
+				</div>
+				<div class="flex justify-flex-start">
+					<table class="border-collapse border-2 border-gray-500 mb-4">
+						<thead>
+							<tr>
+								<th class="border border-gray-400 px-4 py-2 text-sm text-gray-800">Quality</th>
+								<th class="border border-gray-400 px-4 py-2 text-sm text-gray-800">Size</th>
+								<th class="border border-gray-400 px-4 py-2 text-sm text-gray-800">Download</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for i in  vid.audiostreams %}
+								<tr>
+									<td class="border border-gray-400 text-sm px-4 py-2">{{i.quality}}</td>
+									<td class="border border-gray-400 text-sm px-4 py-2">{{i.get_filesize|filesizeformat}}</td>
+									<td class="border border-gray-400 text-sm text-blue-700 px-4 py-2"><a href="{{i.url}}" download="">download</a></td>
+								</tr>
+							{% endfor %}
+						<tbody>
+					</table>
+				</div>
+				{% endif %}
+				
+                
+			</div>
+			{% if info %}
+                	<p class="text-sm pb-5 mt-5 mb-5">{{info}}</p>
+                {% endif %}
+		</div>
+
+
+	</div>
+</body>
+
+</html>
